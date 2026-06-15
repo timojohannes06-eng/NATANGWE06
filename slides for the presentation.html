@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CorroCheck — Group 7 Final Presentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --dark-blue: #1E3A5F;
+    --mid-blue: #2c5282;
+    --light-blue: #B3C4D7;
+    --green: #00BE08;
+    --orange: #EE8E00;
+    --red: #DA1203;
+    --white: #FFFFFF;
+    --light-gray: #F5F5F5;
+    --dark-gray: #333333;
+    --surface: #FFFFFF;
+    --accent: #4A90D9;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    font-family: 'Inter', sans-serif;
+    background: #0d1b2e;
+    overflow: hidden;
+  }
+
+  /* ── SLIDE CONTAINER ── */
+  #deck {
+    width: 100vw; height: 100vh;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.45s ease;
+    text-align: center;
+  }
+  .slide.active { opacity: 1; pointer-events: all; }
+
+  /* ── BACKGROUNDS ── */
+  .bg-hero {
+    background: linear-gradient(145deg, #0d1b2e 0%, #1E3A5F 60%, #2c5282 100%);
+  }
+  .bg-dark { background: #0d1b2e; }
+  .bg-section {
+    background: linear-gradient(160deg, #0f2035 0%, #1a3355 100%);
+  }
+  .bg-light {
+    background: linear-gradient(160deg, #1E3A5F 0%, #0d1b2e 100%);
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .eyebrow {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: var(--light-blue); margin-bottom: 16px;
+  }
+  h1 {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 800; color: var(--white);
+    line-height: 1.1; margin-bottom: 20px;
+  }
+  h1 span { color: var(--accent); }
+  h2 {
+    font-size: clamp(26px, 3.5vw, 42px);
+    font-weight: 700; color: var(--white);
+    margin-bottom: 12px;
+  }
+  h2 span { color: var(--accent); }
+  h3 { font-size: 18px; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+  p { font-size: 15px; font-weight: 400; color: var(--light-blue); line-height: 1.7; }
+  .lead { font-size: clamp(16px, 2vw, 20px); color: #cbd5e0; max-width: 700px; line-height: 1.7; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 60px; height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+    margin: 0 auto 28px;
+  }
+
+  /* ── PILL / BADGE ── */
+  .badge {
+    display: inline-block;
+    background: rgba(74,144,217,0.15);
+    border: 1px solid rgba(74,144,217,0.4);
+    color: var(--accent);
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 20px;
+    margin-bottom: 24px;
+  }
+
+  /* ── GRID LAYOUTS ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; max-width: 900px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; max-width: 960px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 100%; max-width: 960px; }
+
+  /* ── CARD ── */
+  .card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(179,196,215,0.15);
+    border-radius: 14px; padding: 24px;
+    text-align: left;
+    transition: border-color 0.3s;
+  }
+  .card:hover { border-color: rgba(74,144,217,0.4); }
+  .card .icon {
+    font-size: 28px; margin-bottom: 12px;
+    display: block;
+  }
+  .card h3 { font-size: 15px; margin-bottom: 6px; }
+  .card p { font-size: 13px; }
+
+  /* ── STATUS BADGES ── */
+  .status {
+    display: inline-block;
+    padding: 3px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .status-high { background: rgba(218,18,3,0.2); color: #fc8181; border: 1px solid rgba(218,18,3,0.4); }
+  .status-med  { background: rgba(238,142,0,0.2); color: #f6ad55; border: 1px solid rgba(238,142,0,0.4); }
+  .status-low  { background: rgba(0,190,8,0.2);   color: #68d391; border: 1px solid rgba(0,190,8,0.4); }
+
+  /* ── TECH PILL ── */
+  .tech-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(179,196,215,0.2);
+    border-radius: 8px; padding: 8px 14px;
+    font-size: 13px; font-weight: 500; color: var(--light-blue);
+  }
+
+  /* ── TEAM TABLE ── */
+  .team-table { width: 100%; max-width: 880px; border-collapse: collapse; }
+  .team-table th {
+    background: rgba(74,144,217,0.15);
+    color: var(--accent); font-size: 11px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 10px 14px; text-align: left;
+    border-bottom: 1px solid rgba(74,144,217,0.3);
+  }
+  .team-table td {
+    padding: 9px 14px; font-size: 13px; color: var(--light-blue);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .team-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+  /* ── FR TABLE ── */
+  .fr-table { width: 100%; max-width: 880px; border-collapse: collapse; }
+  .fr-table th {
+    background: rgba(74,144,217,0.12);
+    color: var(--accent); font-size: 11px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 9px 14px; text-align: left;
+    border-bottom: 1px solid rgba(74,144,217,0.3);
+  }
+  .fr-table td {
+    padding: 8px 14px; font-size: 12px; color: #a0b4c8;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: top;
+  }
+  .fr-table td:first-child { color: var(--accent); font-weight: 700; white-space: nowrap; }
+
+  /* ── FLOW ── */
+  .flow {
+    display: flex; align-items: center; gap: 8px;
+    flex-wrap: wrap; justify-content: center;
+    max-width: 900px;
+  }
+  .flow-step {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(179,196,215,0.15);
+    border-radius: 10px; padding: 14px 18px;
+    font-size: 13px; font-weight: 500; color: var(--white);
+    text-align: center; min-width: 100px;
+  }
+  .flow-step small { display: block; font-size: 11px; color: var(--light-blue); margin-top: 4px; }
+  .flow-arrow { color: var(--accent); font-size: 20px; }
+
+  /* ── NAVIGATION ── */
+  #nav {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(30,58,95,0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(179,196,215,0.15);
+    border-radius: 50px; padding: 10px 20px;
+    z-index: 100;
+  }
+  #nav button {
+    background: none; border: none; cursor: pointer;
+    color: var(--light-blue); font-size: 18px;
+    padding: 4px 8px; border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+  }
+  #nav button:hover { color: var(--white); background: rgba(255,255,255,0.1); }
+  #slide-counter { font-size: 12px; color: var(--light-blue); font-family: 'Inter', sans-serif; min-width: 50px; text-align: center; }
+
+  /* ── SLIDE NUMBER ── */
+  .slide-num {
+    position: absolute; top: 28px; right: 36px;
+    font-size: 11px; color: rgba(179,196,215,0.4);
+    letter-spacing: 1px;
+  }
+
+  /* ── LOGO MARK ── */
+  .logo-mark {
+    font-size: 13px; font-weight: 700; color: var(--accent);
+    letter-spacing: 2px; text-transform: uppercase;
+    position: absolute; top: 28px; left: 36px;
+    opacity: 0.7;
+  }
+
+  /* ── BIG STAT ── */
+  .big-stat { font-size: clamp(48px, 7vw, 80px); font-weight: 800; color: var(--accent); line-height: 1; }
+  .stat-label { font-size: 13px; color: var(--light-blue); margin-top: 6px; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap { width: 100%; background: rgba(255,255,255,0.08); border-radius: 4px; height: 6px; margin-top: 8px; }
+  .progress-bar { height: 6px; border-radius: 4px; background: var(--accent); }
+
+  /* ── PHASE TIMELINE ── */
+  .timeline { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 800px; text-align: left; }
+  .tl-item { display: flex; gap: 20px; align-items: flex-start; }
+  .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); margin-top: 5px; flex-shrink: 0; }
+  .tl-line { width: 1px; background: rgba(74,144,217,0.3); flex-shrink: 0; align-self: stretch; margin-left: 4px; }
+  .tl-dot-wrap { display: flex; flex-direction: column; align-items: center; }
+  .tl-content h4 { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 3px; }
+  .tl-content p { font-size: 12px; color: #8aa3b8; }
+
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- ══════════ SLIDE 1 — TITLE ══════════ -->
+  <div class="slide bg-hero active">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">01 / 14</div>
+    <div class="badge">Group 7 · UNAM JEDS · Semester 1, 2026</div>
+    <h1>Corro<span>Check</span></h1>
+    <p class="lead">A Mobile Corrosion Inspection &amp; Reporting System<br>Built with Expo · React Native · Firebase · Roboflow AI</p>
+    <div style="margin-top:36px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+      <span class="tech-pill">⚛️ React Native</span>
+      <span class="tech-pill">🔥 Firebase</span>
+      <span class="tech-pill">🤖 Roboflow AI</span>
+      <span class="tech-pill">📱 Expo</span>
+    </div>
+    <p style="margin-top:32px; font-size:13px; color:rgba(179,196,215,0.5);">I3691CP — Computer Programming I &nbsp;|&nbsp; Mr. Mathew Abisai</p>
+  </div>
+
+  <!-- ══════════ SLIDE 2 — TEAM ══════════ -->
+  <div class="slide bg-section">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">02 / 14</div>
+    <div class="eyebrow">Our Team</div>
+    <h2>Group <span>7</span> — 15 Members</h2>
+    <div class="divider"></div>
+    <table class="team-table">
+      <thead><tr><th>#</th><th>Name</th><th>Student No.</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Elise S Shaumbwa</td><td>225049473</td><td>Project Manager · Backend Integration &amp; Testing</td></tr>
+        <tr><td>2</td><td>Penny P Hamunyela</td><td>225058219</td><td>UI/UX Designer</td></tr>
+        <tr><td>3</td><td>Nghoshi Immanuel</td><td>225062127</td><td>UI/UX Designer</td></tr>
+        <tr><td>4</td><td>Elia CN Daniel</td><td>222126698</td><td>UI/UX Designer</td></tr>
+        <tr><td>5</td><td>Emilia Alveta</td><td>222143738</td><td>UI/UX Designer</td></tr>
+        <tr><td>6</td><td>Touno E Ndivayele</td><td>224119346</td><td>UI/UX Designer</td></tr>
+        <tr><td>7</td><td>Martha N Martin</td><td>225076799</td><td>Frontend Developer</td></tr>
+        <tr><td>8</td><td>Tomas Shiyanga</td><td>225077663</td><td>Frontend Developer</td></tr>
+        <tr><td>9</td><td>Luiise N Shatilwapo</td><td>225060221</td><td>Frontend Developer</td></tr>
+        <tr><td>10</td><td>Ndateelela Nghuumono</td><td>225065150</td><td>Frontend Developer</td></tr>
+        <tr><td>11</td><td>Foibe N Hangula</td><td>222136855</td><td>Frontend Developer</td></tr>
+        <tr><td>12</td><td>Willhem N Hishongwa</td><td>225079224</td><td>Backend – Firebase Auth</td></tr>
+        <tr><td>13</td><td>Natangwe Tuyapeni</td><td>225086034</td><td>Backend – Node.js &amp; Roboflow API</td></tr>
+        <tr><td>14</td><td>Timoteus Johannes</td><td>225076985</td><td>Backend – Firebase Firestore</td></tr>
+        <tr><td>15</td><td>Elizabeth Nuugonya</td><td>225066963</td><td>Backend – Firebase Storage</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════ SLIDE 3 — PROBLEM ══════════ -->
+  <div class="slide bg-dark">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">03 / 14</div>
+    <div class="eyebrow">The Problem</div>
+    <h2>Corrosion Costs <span>Lives &amp; Money</span></h2>
+    <div class="divider"></div>
+    <div class="grid-3" style="max-width:860px;">
+      <div class="card">
+        <span class="icon">🏗️</span>
+        <h3>Manual & Inconsistent</h3>
+        <p>Traditional inspections rely on visual assessments by engineers — subjective and time-consuming.</p>
+      </div>
+      <div class="card">
+        <span class="icon">📋</span>
+        <h3>Poor Documentation</h3>
+        <p>Records are often incomplete, delayed, or lost in the field — no standardised system exists in Namibia.</p>
+      </div>
+      <div class="card">
+        <span class="icon">⏳</span>
+        <h3>No Trend Tracking</h3>
+        <p>Without systematic records, it is impossible to monitor corrosion progression over time and act early.</p>
+      </div>
+    </div>
+    <p style="margin-top:28px; max-width:700px;" class="lead">CorroCheck solves this by putting a structured, AI-assisted inspection tool directly in every inspector's pocket.</p>
+  </div>
+
+  <!-- ══════════ SLIDE 4 — SOLUTION ══════════ -->
+  <div class="slide bg-section">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">04 / 14</div>
+    <div class="eyebrow">Our Solution</div>
+    <h2>What <span>CorroCheck</span> Does</h2>
+    <div class="divider"></div>
+    <div class="grid-2" style="max-width:860px; text-align:left;">
+      <div class="card"><span class="icon">📷</span><h3>Photo Capture</h3><p>Take or upload a photo of any metallic surface directly from the app.</p></div>
+      <div class="card"><span class="icon">🤖</span><h3>AI Severity Analysis</h3><p>Roboflow AI classifies corrosion as <span class="status status-low">Low</span> <span class="status status-med">Medium</span> or <span class="status status-high">High</span> instantly.</p></div>
+      <div class="card"><span class="icon">📍</span><h3>GPS Location</h3><p>Auto-captures device GPS coordinates or accepts manual location input.</p></div>
+      <div class="card"><span class="icon">☁️</span><h3>Cloud Storage</h3><p>All reports saved securely to Firebase Firestore, linked to the user's account.</p></div>
+      <div class="card"><span class="icon">📜</span><h3>Inspection History</h3><p>Full history of all past inspections accessible at any time, in order.</p></div>
+      <div class="card"><span class="icon">🔐</span><h3>Secure Accounts</h3><p>Firebase Authentication keeps each inspector's data private and separate.</p></div>
+    </div>
+  </div>
+
+  <!-- ══════════ SLIDE 5 — TARGET USERS ══════════ -->
+  <div class="slide bg-light">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">05 / 14</div>
+    <div class="eyebrow">Who It's For</div>
+    <h2>Target <span>Users</span></h2>
+    <div class="divider"></div>
+    <div class="grid-3" style="max-width:820px;">
+      <div class="card" style="text-align:center;"><span class="icon">⚙️</span><h3>Metallurgical Engineers</h3><p>Monitor material degradation and document findings for analysis.</p></div>
+      <div class="card" style="text-align:center;"><span class="icon">⛏️</span><h3>Mining Engineers</h3><p>Assess corrosion on underground pipes, structures, and equipment.</p></div>
+      <div class="card" style="text-align:center;"><span class="icon">🌉</span><h3>Civil Engineers</h3><p>Inspect bridges, drainage, and structural metalwork for damage.</p></div>
+      <div class="card" style="text-align:center;"><span class="icon">🔍</span><h3>Field Inspectors</h3><p>Conduct structured real-time site inspections on the go.</p></div>
+      <div class="card" style="text-align:center;"><span class="icon">🔧</span><h3>Maintenance Personnel</h3><p>Record corrosion findings during maintenance rounds for follow-up.</p></div>
+      <div class="card" style="text-align:center;"><span class="icon">🇳🇦</span><h3>Namibian Industry</h3><p>First standardised mobile inspection tool targeting local infrastructure needs.</p></div>
+    </div>
+  </div>
+
+  <!-- ══════════ SLIDE 6 — TECH STACK ══════════ -->
+  <div class="slide bg-dark">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">06 / 14</div>
+    <div class="eyebrow">Technology</div>
+    <h2>The <span>Stack</span></h2>
+    <div class="divider"></div>
+    <div class="grid-2" style="max-width:820px;">
+      <div class="card">
+        <h3>📱 Mobile Framework</h3>
+        <p style="margin-bottom:10px;">React Native + Expo (Managed Workflow)</p>
+        <p>Android-first, targets API Level 29+. Expo Go used during dev; EAS Build for final APK.</p>
+      </div>
+      <div class="card">
+        <h3>🔐 Authentication</h3>
+        <p style="margin-bottom:10px;">Firebase Authentication</p>
+        <p>Email &amp; password registration and login. Unique UID per user ties all data together.</p>
+      </div>
+      <div class="card">
+        <h3>🗄️ Database</h3>
+        <p style="margin-bottom:10px;">Firebase Firestore</p>
+        <p>NoSQL cloud database. Stores inspection reports in a <code style="color:var(--accent);">users/{userId}/scans</code> sub-collection.</p>
+      </div>
+      <div class="card">
+        <h3>🖼️ File Storage</h3>
+        <p style="margin-bottom:10px;">Firebase Storage</p>
+        <p>Stores uploaded inspection photos. Returns a URL saved alongside each scan record.</p>
+      </div>
+      <div class="card">
+        <h3>🤖 AI Analysis</h3>
+        <p style="margin-bottom:10px;">Roboflow API + Node.js</p>
+        <p>Node.js server securely forwards photos to Roboflow. Returns severity + confidence score.</p>
+      </div>
+      <div class="card">
+        <h3>🎨 Design</h3>
+        <p style="margin-bottom:10px;">Figma + Inter font</p>
+        <p>Blue &amp; gray palette. Designed on iPhone 15 Pro frame. Full interactive prototype delivered.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ SLIDE 7 — DATA MODEL ══════════ -->
+  <div class="slide bg-section">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">07 / 14</div>
+    <div class="eyebrow">Firebase Architecture</div>
+    <h2>Firestore <span>Data Model</span></h2>
+    <div class="divider"></div>
+    <div class="grid-2" style="max-width:860px; align-items:start;">
+      <div class="card">
+        <h3 style="color:var(--accent); margin-bottom:14px;">📁 users (collection)</h3>
+        <div style="font-size:12px; color:#8aa3b8; line-height:2;">
+          <div><span style="color:var(--accent);">userId</span> — String (Firebase UID)</div>
+          <div><span style="color:var(--accent);">name</span> — String</div>
+          <div><span style="color:var(--accent);">email</span> — String</div>
+          <div><span style="color:var(--accent);">createdAt</span> — Timestamp</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent); margin-bottom:14px;">📁 users/{userId}/scans (sub-collection)</h3>
+        <div style="font-size:12px; color:#8aa3b8; line-height:2;">
+          <div><span style="color:var(--accent);">scanId</span> — Auto-ID</div>
+          <div><span style="color:var(--accent);">photoURL</span> — String (Firebase Storage link)</div>
+          <div><span style="color:var(--accent);">corrosionType</span> — Uniform / Galvanic / Pitting / Crevice</div>
+          <div><span style="color:var(--accent);">severity</span> — Low / Medium / High (Roboflow)</div>
+          <div><span style="color:var(--accent);">location</span> — GPS coords or manual text</div>
+          <div><span style="color:var(--accent);">date</span> — Timestamp</div>
+          <div><span style="color:var(--accent);">notes</span> — String (optional)</div>
+          <div><span style="color:var(--accent);">confidence</span> — Number (AI %)</div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:20px; font-size:13px; color:#8aa3b8;">Security rule: <code style="color:var(--accent);">request.auth != null</code> required for all reads and writes.</p>
+  </div>
+
+  <!-- ══════════ SLIDE 8 — FUNCTIONAL REQUIREMENTS ══════════ -->
+  <div class="slide bg-light">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">08 / 14</div>
+    <div class="eyebrow">Requirements</div>
+    <h2>Functional <span>Requirements</span></h2>
+    <div class="divider"></div>
+    <table class="fr-table">
+      <thead><tr><th>ID</th><th>Requirement</th><th>Priority</th><th>Service</th></tr></thead>
+      <tbody>
+        <tr><td>FR001</td><td>Register with full name, email &amp; password</td><td><span class="status status-high">High</span></td><td>Firebase Auth</td></tr>
+        <tr><td>FR002</td><td>Login and logout securely</td><td><span class="status status-high">High</span></td><td>Firebase Auth</td></tr>
+        <tr><td>FR003</td><td>Create inspection report by capturing or uploading photo</td><td><span class="status status-high">High</span></td><td>Firebase Storage</td></tr>
+        <tr><td>FR004</td><td>Select corrosion type: Uniform, Galvanic, Pitting, or Crevice</td><td><span class="status status-high">High</span></td><td>Firestore</td></tr>
+        <tr><td>FR005</td><td>Auto-capture device GPS coordinates</td><td><span class="status status-med">Medium</span></td><td>Device GPS</td></tr>
+        <tr><td>FR006</td><td>Manual location entry if GPS unavailable</td><td><span class="status status-med">Medium</span></td><td>Firestore</td></tr>
+        <tr><td>FR007</td><td>Submit photo to Roboflow API and receive Low/Med/High severity</td><td><span class="status status-high">High</span></td><td>Roboflow / Node.js</td></tr>
+        <tr><td>FR008</td><td>Save complete inspection report to Firestore under user account</td><td><span class="status status-high">High</span></td><td>Firestore</td></tr>
+        <tr><td>FR009</td><td>Display all user reports in reverse chronological order</td><td><span class="status status-high">High</span></td><td>Firestore</td></tr>
+        <tr><td>FR010</td><td>View full report details including photo, type, severity, location</td><td><span class="status status-high">High</span></td><td>Firestore / Storage</td></tr>
+        <tr><td>FR011</td><td>Display AI confidence score alongside severity classification</td><td><span class="status status-low">Low</span></td><td>Roboflow API</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══════════ SLIDE 9 — AI ANALYSIS FLOW ══════════ -->
+  <div class="slide bg-dark">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">09 / 14</div>
+    <div class="eyebrow">Core Feature</div>
+    <h2>AI Analysis <span>Flow</span></h2>
+    <div class="divider"></div>
+    <div class="flow">
+      <div class="flow-step">📷 User captures photo<small>in app</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">📤 App sends photo<small>to Node.js server</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">🔁 Server forwards<small>to Roboflow API</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">🤖 Roboflow analyses<small>severity + confidence</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">📨 Result returned<small>to app</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">💾 Saved to Firestore<small>+ shown to user</small></div>
+    </div>
+    <div style="margin-top:36px; display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
+      <div style="text-align:center;"><div class="big-stat" style="font-size:36px;"><span class="status status-low" style="font-size:20px;">LOW</span></div><div class="stat-label">Minimal rust, surface discoloration</div></div>
+      <div style="text-align:center;"><div class="big-stat" style="font-size:36px;"><span class="status status-med" style="font-size:20px;">MEDIUM</span></div><div class="stat-label">Active rust, structural risk warning</div></div>
+      <div style="text-align:center;"><div class="big-stat" style="font-size:36px;"><span class="status status-high" style="font-size:20px;">HIGH</span></div><div class="stat-label">Severe degradation, immediate attention</div></div>
+    </div>
+    <p style="margin-top:20px; font-size:13px; color:#8aa3b8;">Node.js keeps the Roboflow API key secure — never exposed in the mobile app.</p>
+  </div>
+
+  <!-- ══════════ SLIDE 10 — UI / UX ══════════ -->
+  <div class="slide bg-section">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">10 / 14</div>
+    <div class="eyebrow">Design</div>
+    <h2>UI / UX <span>Design System</span></h2>
+    <div class="divider"></div>
+    <div class="grid-2" style="max-width:860px; align-items:start;">
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <h3>🎨 Colour Palette</h3>
+          <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+            <div style="text-align:center;"><div style="width:42px;height:42px;border-radius:8px;background:#1E3A5F;"></div><div style="font-size:10px;color:#8aa3b8;margin-top:4px;">Dark Blue</div></div>
+            <div style="text-align:center;"><div style="width:42px;height:42px;border-radius:8px;background:#B3C4D7;"></div><div style="font-size:10px;color:#8aa3b8;margin-top:4px;">Light Blue</div></div>
+            <div style="text-align:center;"><div style="width:42px;height:42px;border-radius:8px;background:#00BE08;"></div><div style="font-size:10px;color:#8aa3b8;margin-top:4px;">Success</div></div>
+            <div style="text-align:center;"><div style="width:42px;height:42px;border-radius:8px;background:#EE8E00;"></div><div style="font-size:10px;color:#8aa3b8;margin-top:4px;">Warning</div></div>
+            <div style="text-align:center;"><div style="width:42px;height:42px;border-radius:8px;background:#DA1203;"></div><div style="font-size:10px;color:#8aa3b8;margin-top:4px;">Critical</div></div>
+            <div style="text-align:center;"><div style="width:42px;height:42px;border-radius:8px;background:#F5F5F5;border:1px solid #333;"></div><div style="font-size:10px;color:#8aa3b8;margin-top:4px;">Background</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>✏️ Typography</h3>
+          <p style="margin-top:8px;"><strong style="color:var(--white);">Inter</strong> — Clean and modern</p>
+          <div style="font-size:12px; color:#8aa3b8; line-height:2; margin-top:8px;">
+            <div>H1 — 24px Bold · Screen titles</div>
+            <div>H2 — 20px Bold · Section headings</div>
+            <div>H3 — 16px Medium · Labels</div>
+            <div>Body — 14px Regular</div>
+            <div>Small — 12px · Captions &amp; hints</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <h3>📱 Navigation Structure</h3>
+          <p style="margin-top:8px; margin-bottom:12px;">Bottom Tab Navigation (4 tabs)</p>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span class="tech-pill">🏠 Home</span>
+            <span class="tech-pill">📤 Upload</span>
+            <span class="tech-pill">📜 History</span>
+            <span class="tech-pill">👤 Profile</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>🖥️ Screen List</h3>
+          <div style="font-size:12px; color:#8aa3b8; line-height:2; margin-top:8px;">
+            <div>Splash · Login · Register · Forgot Password</div>
+            <div>Home Dashboard · Upload Screen</div>
+            <div>Results Screen · History Screen</div>
+            <div>Inspection Detail · Profile / Settings</div>
+          </div>
+          <p style="font-size:11px; color:#4A90D9; margin-top:10px;">Designed on iPhone 15 Pro frame in Figma</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ SLIDE 11 — USER JOURNEYS ══════════ -->
+  <div class="slide bg-light">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">11 / 14</div>
+    <div class="eyebrow">User Experience</div>
+    <h2>Two Core <span>User Journeys</span></h2>
+    <div class="divider"></div>
+    <div class="grid-2" style="max-width:860px;">
+      <div class="card">
+        <h3 style="color:var(--accent); margin-bottom:16px;">Journey 1 — Authentication</h3>
+        <div class="flow" style="flex-direction:column; align-items:flex-start; gap:8px;">
+          <div class="flow-step" style="width:100%;">📱 Splash Screen</div>
+          <div class="flow-arrow" style="align-self:center;">↓</div>
+          <div class="flow-step" style="width:100%;">📝 Sign Up</div>
+          <div class="flow-arrow" style="align-self:center;">↓</div>
+          <div class="flow-step" style="width:100%;">🔑 Login</div>
+          <div class="flow-arrow" style="align-self:center;">↓</div>
+          <div class="flow-step" style="width:100%; border-color:rgba(0,190,8,0.4);">🏠 Home Dashboard</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent); margin-bottom:16px;">Journey 2 — Inspection Workflow</h3>
+        <div class="flow" style="flex-direction:column; align-items:flex-start; gap:8px;">
+          <div class="flow-step" style="width:100%;">🏠 Home</div>
+          <div class="flow-arrow" style="align-self:center;">↓</div>
+          <div class="flow-step" style="width:100%;">📤 Upload Photo</div>
+          <div class="flow-arrow" style="align-self:center;">↓</div>
+          <div class="flow-step" style="width:100%;">🤖 AI Results Screen</div>
+          <div class="flow-arrow" style="align-self:center;">↓</div>
+          <div class="flow-step" style="width:100%;">📜 History</div>
+          <div class="flow-arrow" style="align-self:center;">↓</div>
+          <div class="flow-step" style="width:100%; border-color:rgba(0,190,8,0.4);">🔍 Inspection Details</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ SLIDE 12 — PROJECT TIMELINE ══════════ -->
+  <div class="slide bg-dark">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">12 / 14</div>
+    <div class="eyebrow">Semester Progress</div>
+    <h2>14-Week <span>Timeline</span></h2>
+    <div class="divider"></div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot" style="background:#68d391;"></div><div class="tl-line" style="height:28px;"></div></div>
+        <div class="tl-content"><h4>Phase 0 — Setup (Wks 1–2)</h4><p>Group formed · GitHub repo · Dev environment · 3 app ideas prepared</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot" style="background:#68d391;"></div><div class="tl-line" style="height:28px;"></div></div>
+        <div class="tl-content"><h4>Phase 1 — Pitch Week (Wks 3–4)</h4><p>Presented 3 ideas · CorroCheck selected and registered · Form signed</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot" style="background:#68d391;"></div><div class="tl-line" style="height:28px;"></div></div>
+        <div class="tl-content"><h4>Phase 2 — SRS (Wks 5–8) · Submitted 25 Apr</h4><p>11 Functional Requirements · Firestore data model · Use case diagrams</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot" style="background:#68d391;"></div><div class="tl-line" style="height:28px;"></div></div>
+        <div class="tl-content"><h4>Phase 3 — Prototype (Wks 9–12) · Submitted 30 May</h4><p>Figma prototype · Full UI Design System · Design Rationale submitted</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot" style="background:#68d391;"></div><div class="tl-line" style="height:28px;"></div></div>
+        <div class="tl-content"><h4>Phase 4A — Progress Demo (Wk 13)</h4><p>Live Expo app demonstrated · Firebase Auth + Firestore working · Feedback received</p></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot-wrap"><div class="tl-dot" style="background:var(--accent);"></div></div>
+        <div class="tl-content"><h4>Phase 4B — Final Submission (Wk 14) · 13 Jun 2026</h4><p>APK via EAS Build · All FRs implemented · User Manual · Contribution Reports</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ SLIDE 13 — DELIVERABLES ══════════ -->
+  <div class="slide bg-section">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">13 / 14</div>
+    <div class="eyebrow">Final Submission</div>
+    <h2>7 <span>Deliverables</span> — 13 June 2026</h2>
+    <div class="divider"></div>
+    <div class="grid-2" style="max-width:860px;">
+      <div class="card"><span class="icon">💻</span><h3>1. GitHub Repository</h3><p>Full 14-week commit history from all members. Min. 15 commits per student.</p></div>
+      <div class="card"><span class="icon">📦</span><h3>2. Android APK</h3><p>Compiled via EAS Build · Installable standalone app · GitHub Releases.</p></div>
+      <div class="card"><span class="icon">📄</span><h3>3. Final SRS</h3><p>Updated requirements document if any changes were made during development.</p></div>
+      <div class="card"><span class="icon">📖</span><h3>4. User Manual</h3><p>Installation and usage guide — minimum 5 pages.</p></div>
+      <div class="card"><span class="icon">🎨</span><h3>5. Figma Prototype Link</h3><p>Final interactive prototype — shareable view-only link submitted.</p></div>
+      <div class="card"><span class="icon">👤</span><h3>6 &amp; 7. Individual Reports + Declaration</h3><p>One contribution report per student. Signed group declaration (physical copy).</p></div>
+    </div>
+  </div>
+
+  <!-- ══════════ SLIDE 14 — CLOSING ══════════ -->
+  <div class="slide bg-hero">
+    <div class="logo-mark">CorroCheck</div>
+    <div class="slide-num">14 / 14</div>
+    <div class="badge">UNAM JEDS · Group 7 · Semester 1, 2026</div>
+    <h1>Corro<span>Check</span></h1>
+    <p class="lead">Smarter corrosion inspection for Namibian engineers.<br>Built with Expo · React Native · Firebase · Roboflow AI.</p>
+    <div style="margin-top:36px; display:flex; gap:32px; flex-wrap:wrap; justify-content:center;">
+      <div style="text-align:center;"><div class="big-stat">15</div><div class="stat-label">Team Members</div></div>
+      <div style="text-align:center;"><div class="big-stat">11</div><div class="stat-label">Functional Requirements</div></div>
+      <div style="text-align:center;"><div class="big-stat">14</div><div class="stat-label">Weeks of Work</div></div>
+    </div>
+    <p style="margin-top:40px; font-size:14px; color:rgba(179,196,215,0.6);">Thank you — we welcome your questions.</p>
+    <p style="margin-top:8px; font-size:12px; color:rgba(179,196,215,0.35);">I3691CP · Computer Programming I · Mr. Mathew Abisai</p>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- ── NAVIGATION ── -->
+<div id="nav">
+  <button id="btn-prev" title="Previous">&#8592;</button>
+  <span id="slide-counter">1 / 14</span>
+  <button id="btn-next" title="Next">&#8594;</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('slide-counter');
+  let current = 0;
+
+  function go(n) {
+    slides[current].classList.remove('active');
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    counter.textContent = (current + 1) + ' / ' + slides.length;
+  }
+
+  document.getElementById('btn-next').addEventListener('click', () => go(current + 1));
+  document.getElementById('btn-prev').addEventListener('click', () => go(current - 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   go(current - 1);
+  });
+</script>
+</body>
+</html>

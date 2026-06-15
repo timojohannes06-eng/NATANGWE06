@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:pPr><w:pStyle w:val="code"/></w:pPr><w:r><w:t><![CDATA[classdef NEW_TN_225076985_app1 < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        UIFigure                     matlab.ui.Figure
+        lblLabel4_5                  matlab.ui.control.Label
+        lblLabel8                    matlab.ui.control.Label
+        edtIyy                       matlab.ui.control.NumericEditField
+        IyyEditFieldLabel            matlab.ui.control.Label
+        lblLabel4_4                  matlab.ui.control.Label
+        lblLabel4_3                  matlab.ui.control.Label
+        lblLabel4_2                  matlab.ui.control.Label
+        lblLabel6                    matlab.ui.control.Label
+        lblLabel5                    matlab.ui.control.Label
+        lblLabel4                    matlab.ui.control.Label
+        lblLabel3                    matlab.ui.control.Label
+        lblLabel2                    matlab.ui.control.Label
+        lblMOMENTOFTBEAMS            matlab.ui.control.Label
+        btnButton                    matlab.ui.control.Button
+        lblLabel_2                   matlab.ui.control.Label
+        lblLabel                     matlab.ui.control.Label
+        edtAREA2                     matlab.ui.control.NumericEditField
+        AREA2Label                   matlab.ui.control.Label
+        edtAREA1                     matlab.ui.control.NumericEditField
+        AREA1Label                   matlab.ui.control.Label
+        edtCENTROID                  matlab.ui.control.NumericEditField
+        CENTROIDLabel                matlab.ui.control.Label
+        lblhorizontalcomponentLabel  matlab.ui.control.Label
+        lblverticalcomponentLabel    matlab.ui.control.Label
+        btnButton2                   matlab.ui.control.Button
+        btnCLEAR                     matlab.ui.control.Button
+        edtIxx                       matlab.ui.control.NumericEditField
+        IxxLabel                     matlab.ui.control.Label
+        edtRANDOMdivisor             matlab.ui.control.NumericEditField
+        RANDOMdivisorEditFieldLabel  matlab.ui.control.Label
+        edtMOMENT2                   matlab.ui.control.NumericEditField
+        Ixc2Label                    matlab.ui.control.Label
+        edtMOMENT1                   matlab.ui.control.NumericEditField
+        IxcLabel                     matlab.ui.control.Label
+        edttHEIGHT2                  matlab.ui.control.NumericEditField
+        HEIGHT2EditFieldLabel        matlab.ui.control.Label
+        edtHEIGHT1                   matlab.ui.control.NumericEditField
+        HEIGHT1EditFieldLabel        matlab.ui.control.Label
+        edtbaseL2                    matlab.ui.control.NumericEditField
+        baseL2EditFieldLabel         matlab.ui.control.Label
+        edtbaseL1                    matlab.ui.control.NumericEditField
+        baseL1EditFieldLabel         matlab.ui.control.Label
+    end
+
+    % Callbacks that handle component events
+    methods (Access = private)
+
+        % Button pushed function: btnCLEAR
+        function btnCLEARButtonPushed(app, event)
+            app.edtIyy='';
+            app.edttHEIGHT2.Value='';
+            app.edtHEIGHT1.Value='';
+            app.edtbaseL2.Value='';
+           app.edtbaseL1.Value=''; 
+        end
+
+        % Button pushed function: btnButton2
+        function btnButton2Pushed(app, event)
+           
+            HEIGHT2=app.edttHEIGHT2.Value;
+            HEIGHT1=app.edtHEIGHT1.Value;
+            baseL2 = app.edtbaseL2.Value;
+            baseL1=app.edtbaseL1.Value;
+            app.edtRANDOMdivisor.Value=12;
+            app.edtAREA1.Value= HEIGHT1*baseL1;
+            app.edtAREA2.Value=HEIGHT2*baseL2;
+            app.edtCENTROID.Value=(((app.edtAREA1.Value*(HEIGHT1)/2)+(app.edtAREA2.Value*((HEIGHT2)/2+HEIGHT1))))/( app.edtAREA1.Value +app.edtAREA2.Value);
+            app.edtMOMENT2.Value=((baseL2*(HEIGHT2)^3)/( app.edtRANDOMdivisor.Value))+(app.edtAREA2.Value)*((HEIGHT1+ (HEIGHT2)/2 - app.edtCENTROID.Value))^2;
+            app.edtMOMENT1.Value=((baseL1*(HEIGHT1)^3)/( app.edtRANDOMdivisor.Value))+( app.edtAREA1.Value)*( app.edtCENTROID.Value-(app.edtHEIGHT1.Value/2))^2;
+            app.edtIxx.Value=app.edtMOMENT2.Value + app.edtMOMENT1.Value;
+            app.edtIyy.Value=((baseL1^3)*(HEIGHT1)/(app.edtRANDOMdivisor.Value))+( baseL2^3)*( HEIGHT2)/(app.edtRANDOMdivisor.Value);
+        end
+
+        % Button pushed function: btnButton
+        function btnButtonPushed(app, event)
+            app.edtIxx.Value='';
+            app.edtMOMENT2.Value='';
+            app.edtMOMENT1.Value='';
+            app.edttHEIGHT2.Value='';
+            app.edtHEIGHT1.Value='';
+            app.edtbaseL2.Value='';
+            app.edtbaseL1.Value=''; 
+            app.edtCENTROID.Value='';
+            app.edtAREA2.Value='';
+            app.edtAREA1.Value='';
+            app.edtIyy='';
+        end
+    end
+
+    % Component initialization
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create UIFigure and hide until all components are created
+            app.UIFigure = uifigure('Visible', 'off');
+            app.UIFigure.Color = [1 0.9098 0.3922];
+            app.UIFigure.Position = [500 200 479 420];
+            app.UIFigure.Name = 'MATLAB App';
+            app.UIFigure.Scrollable = 'on';
+
+            % Create baseL1EditFieldLabel
+            app.baseL1EditFieldLabel = uilabel(app.UIFigure);
+            app.baseL1EditFieldLabel.BackgroundColor = [0.949 0.4039 0.7725];
+            app.baseL1EditFieldLabel.HorizontalAlignment = 'right';
+            app.baseL1EditFieldLabel.FontWeight = 'bold';
+            app.baseL1EditFieldLabel.Position = [27 127 59 22];
+            app.baseL1EditFieldLabel.Text = 'baseL1';
+
+            % Create edtbaseL1
+            app.edtbaseL1 = uieditfield(app.UIFigure, 'numeric');
+            app.edtbaseL1.AllowEmpty = 'on';
+            app.edtbaseL1.BackgroundColor = [0.949 0.4039 0.7725];
+            app.edtbaseL1.Position = [96 127 93 22];
+            app.edtbaseL1.Value = [];
+
+            % Create baseL2EditFieldLabel
+            app.baseL2EditFieldLabel = uilabel(app.UIFigure);
+            app.baseL2EditFieldLabel.BackgroundColor = [0.949 0.4039 0.7725];
+            app.baseL2EditFieldLabel.HorizontalAlignment = 'right';
+            app.baseL2EditFieldLabel.FontWeight = 'bold';
+            app.baseL2EditFieldLabel.Position = [306 127 58 22];
+            app.baseL2EditFieldLabel.Text = 'baseL2';
+
+            % Create edtbaseL2
+            app.edtbaseL2 = uieditfield(app.UIFigure, 'numeric');
+            app.edtbaseL2.AllowEmpty = 'on';
+            app.edtbaseL2.BackgroundColor = [0.949 0.4039 0.7725];
+            app.edtbaseL2.Position = [367 127 100 22];
+            app.edtbaseL2.Value = [];
+
+            % Create HEIGHT1EditFieldLabel
+            app.HEIGHT1EditFieldLabel = uilabel(app.UIFigure);
+            app.HEIGHT1EditFieldLabel.BackgroundColor = [0.949 0.4039 0.7725];
+            app.HEIGHT1EditFieldLabel.HorizontalAlignment = 'right';
+            app.HEIGHT1EditFieldLabel.FontWeight = 'bold';
+            app.HEIGHT1EditFieldLabel.Position = [26 94 57 22];
+            app.HEIGHT1EditFieldLabel.Text = 'HEIGHT1';
+
+            % Create edtHEIGHT1
+            app.edtHEIGHT1 = uieditfield(app.UIFigure, 'numeric');
+            app.edtHEIGHT1.AllowEmpty = 'on';
+            app.edtHEIGHT1.BackgroundColor = [0.949 0.4039 0.7725];
+            app.edtHEIGHT1.Position = [93 94 96 22];
+            app.edtHEIGHT1.Value = [];
+
+            % Create HEIGHT2EditFieldLabel
+            app.HEIGHT2EditFieldLabel = uilabel(app.UIFigure);
+            app.HEIGHT2EditFieldLabel.BackgroundColor = [0.949 0.4039 0.7725];
+            app.HEIGHT2EditFieldLabel.HorizontalAlignment = 'right';
+            app.HEIGHT2EditFieldLabel.FontWeight = 'bold';
+            app.HEIGHT2EditFieldLabel.Position = [306 94 57 22];
+            app.HEIGHT2EditFieldLabel.Text = 'HEIGHT2';
+
+            % Create edttHEIGHT2
+            app.edttHEIGHT2 = uieditfield(app.UIFigure, 'numeric');
+            app.edttHEIGHT2.AllowEmpty = 'on';
+            app.edttHEIGHT2.BackgroundColor = [0.949 0.4039 0.7725];
+            app.edttHEIGHT2.Position = [368 94 98 22];
+            app.edttHEIGHT2.Value = [];
+
+            % Create IxcLabel
+            app.IxcLabel = uilabel(app.UIFigure);
+            app.IxcLabel.BackgroundColor = [0.949 0.4039 0.7725];
+            app.IxcLabel.HorizontalAlignment = 'right';
+            app.IxcLabel.FontWeight = 'bold';
+            app.IxcLabel.Position = [34 262 28 22];
+            app.IxcLabel.Text = 'Ixc1';
+
+            % Create edtMOMENT1
+            app.edtMOMENT1 = uieditfield(app.UIFigure, 'numeric');
+            app.edtMOMENT1.AllowEmpty = 'on';
+            app.edtMOMENT1.BackgroundColor = [0.949 0.4039 0.7725];
+            app.edtMOMENT1.Position = [77 262 93 22];
+            app.edtMOMENT1.Value = [];
+
+            % Create Ixc2Label
+            app.Ixc2Label = uilabel(app.UIFigure);
+            app.Ixc2Label.BackgroundColor = [0.949 0.4039 0.7725];
+            app.Ixc2Label.HorizontalAlignment = 'right';
+            app.Ixc2Label.FontWeight = 'bold';
+            app.Ixc2Label.Position = [313 262 28 22];
+            app.Ixc2Label.Text = 'Ixc2';
+
+            % Create edtMOMENT2
+            app.edtMOMENT2 = uieditfield(app.UIFigure, 'numeric');
+            app.edtMOMENT2.AllowEmpty = 'on';
+            app.edtMOMENT2.BackgroundColor = [0.949 0.4039 0.7725];
+            app.edtMOMENT2.Position = [343 262 113 22];
+            app.edtMOMENT2.Value = [];
+
+            % Create RANDOMdivisorEditFieldLabel
+            app.RANDOMdivisorEditFieldLabel = uilabel(app.UIFigure);
+            app.RANDOMdivisorEditFieldLabel.HorizontalAlignment = 'right';
+            app.RANDOMdivisorEditFieldLabel.FontWeight = 'bold';
+            app.RANDOMdivisorEditFieldLabel.Position = [297 57 90 22];
+            app.RANDOMdivisorEditFieldLabel.Text = 'RANDOM divisor';
+
+            % Create edtRANDOMdivisor
+            app.edtRANDOMdivisor = uieditfield(app.UIFigure, 'numeric');
+            app.edtRANDOMdivisor.Position = [401 57 27 22];
+            app.edtRANDOMdivisor.Value = 12;
+
+            % Create IxxLabel
+            app.IxxLabel = uilabel(app.UIFigure);
+            app.IxxLabel.BackgroundColor = [1 0 1];
+            app.IxxLabel.HorizontalAlignment = 'right';
+            app.IxxLabel.FontSize = 18;
+            app.IxxLabel.FontWeight = 'bold';
+            app.IxxLabel.Position = [33 358 30 23];
+            app.IxxLabel.Text = 'Ixx';
+
+            % Create edtIxx
+            app.edtIxx = uieditfield(app.UIFigure, 'numeric');
+            app.edtIxx.AllowEmpty = 'on';
+            app.edtIxx.BackgroundColor = [1 0 1];
+            app.edtIxx.Position = [78 359 126 22];
+            app.edtIxx.Value = [];
+
+            % Create btnCLEAR
+            app.btnCLEAR = uibutton(app.UIFigure, 'push');
+            app.btnCLEAR.ButtonPushedFcn = createCallbackFcn(app, @btnCLEARButtonPushed, true);
+            app.btnCLEAR.BackgroundColor = [0.5216 0.0863 0.8196];
+            app.btnCLEAR.FontColor = [0 0 0];
+            app.btnCLEAR.Position = [149 20 100 23];
+            app.btnCLEAR.Text = 'CLEAR';
+
+            % Create btnButton2
+            app.btnButton2 = uibutton(app.UIFigure, 'push');
+            app.btnButton2.ButtonPushedFcn = createCallbackFcn(app, @btnButton2Pushed, true);
+            app.btnButton2.BackgroundColor = [0.5216 0.0863 0.8196];
+            app.btnButton2.Position = [287 20 100 23];
+            app.btnButton2.Text = '=';
+
+            % Create lblverticalcomponentLabel
+            app.lblverticalcomponentLabel = uilabel(app.UIFigure);
+            app.lblverticalcomponentLabel.BackgroundColor = [0.949 0.4039 0.7725];
+            app.lblverticalcomponentLabel.FontSize = 14;
+            app.lblverticalcomponentLabel.FontWeight = 'bold';
+            app.lblverticalcomponentLabel.Position = [26 176 184 22];
+            app.lblverticalcomponentLabel.Text = 'vertical component';
+
+            % Create lblhorizontalcomponentLabel
+            app.lblhorizontalcomponentLabel = uilabel(app.UIFigure);
+            app.lblhorizontalcomponentLabel.BackgroundColor = [1 0 1];
+            app.lblhorizontalcomponentLabel.HorizontalAlignment = 'center';
+            app.lblhorizontalcomponentLabel.FontSize = 14;
+            app.lblhorizontalcomponentLabel.FontWeight = 'bold';
+            app.lblhorizontalcomponentLabel.Position = [276 176 190 22];
+            app.lblhorizontalcomponentLabel.Text = 'horizontal component';
+
+            % Create CENTROIDLabel
+            app.CENTROIDLabel = uilabel(app.UIFigure);
+            app.CENTROIDLabel.BackgroundColor = [1 0 1];
+            app.CENTROIDLabel.HorizontalAlignment = 'right';
+            app.CENTROIDLabel.FontWeight = 'bold';
+            app.CENTROIDLabel.Position = [279 330 68 22];
+            app.CENTROIDLabel.Text = 'CENTROID';
+
+            % Create edtCENTROID
+            app.edtCENTROID = uieditfield(app.UIFigure, 'numeric');
+            app.edtCENTROID.AllowEmpty = 'on';
+            app.edtCENTROID.BackgroundColor = [1 0 1];
+            app.edtCENTROID.Position = [362 330 100 22];
+            app.edtCENTROID.Value = [];
+
+            % Create AREA1Label
+            app.AREA1Label = uilabel(app.UIFigure);
+            app.AREA1Label.BackgroundColor = [0 1 1];
+            app.AREA1Label.HorizontalAlignment = 'right';
+            app.AREA1Label.FontWeight = 'bold';
+            app.AREA1Label.Position = [40 233 62 22];
+            app.AREA1Label.Text = 'AREA1';
+
+            % Create edtAREA1
+            app.edtAREA1 = uieditfield(app.UIFigure, 'numeric');
+            app.edtAREA1.AllowEmpty = 'on';
+            app.edtAREA1.BackgroundColor = [0 1 1];
+            app.edtAREA1.Position = [128 233 81 22];
+            app.edtAREA1.Value = [];
+
+            % Create AREA2Label
+            app.AREA2Label = uilabel(app.UIFigure);
+            app.AREA2Label.BackgroundColor = [0.4235 0.9569 1];
+            app.AREA2Label.HorizontalAlignment = 'right';
+            app.AREA2Label.FontWeight = 'bold';
+            app.AREA2Label.Position = [283 233 58 22];
+            app.AREA2Label.Text = 'AREA2';
+
+            % Create edtAREA2
+            app.edtAREA2 = uieditfield(app.UIFigure, 'numeric');
+            app.edtAREA2.AllowEmpty = 'on';
+            app.edtAREA2.BackgroundColor = [0.4235 0.9569 1];
+            app.edtAREA2.Position = [344 233 113 22];
+            app.edtAREA2.Value = [];
+
+            % Create lblLabel
+            app.lblLabel = uilabel(app.UIFigure);
+            app.lblLabel.BackgroundColor = [0.8196 0.0157 0.5451];
+            app.lblLabel.Position = [11 298 480 22];
+            app.lblLabel.Text = '';
+
+            % Create lblLabel_2
+            app.lblLabel_2 = uilabel(app.UIFigure);
+            app.lblLabel_2.BackgroundColor = [0.7529 0.3608 0.9843];
+            app.lblLabel_2.Position = [1 207 480 11];
+            app.lblLabel_2.Text = '';
+
+            % Create btnButton
+            app.btnButton = uibutton(app.UIFigure, 'push');
+            app.btnButton.ButtonPushedFcn = createCallbackFcn(app, @btnButtonPushed, true);
+            app.btnButton.BackgroundColor = [0.5216 0.0863 0.8196];
+            app.btnButton.Position = [0 20 100 23];
+            app.btnButton.Text = 'RESET';
+
+            % Create lblMOMENTOFTBEAMS
+            app.lblMOMENTOFTBEAMS = uilabel(app.UIFigure);
+            app.lblMOMENTOFTBEAMS.BackgroundColor = [0.5216 0.0863 0.8196];
+            app.lblMOMENTOFTBEAMS.HorizontalAlignment = 'center';
+            app.lblMOMENTOFTBEAMS.FontSize = 18;
+            app.lblMOMENTOFTBEAMS.FontWeight = 'bold';
+            app.lblMOMENTOFTBEAMS.FontColor = [1 1 1];
+            app.lblMOMENTOFTBEAMS.Position = [130 398 223 23];
+            app.lblMOMENTOFTBEAMS.Text = 'MOMENT OF T BEAMS';
+
+            % Create lblLabel2
+            app.lblLabel2 = uilabel(app.UIFigure);
+            app.lblLabel2.BackgroundColor = [0.8196 0.0157 0.5451];
+            app.lblLabel2.Position = [2 48 479 10];
+            app.lblLabel2.Text = '';
+
+            % Create lblLabel3
+            app.lblLabel3 = uilabel(app.UIFigure);
+            app.lblLabel3.BackgroundColor = [0.8196 0.0157 0.5451];
+            app.lblLabel3.Position = [465 11 25 410];
+            app.lblLabel3.Text = '';
+
+            % Create lblLabel4
+            app.lblLabel4 = uilabel(app.UIFigure);
+            app.lblLabel4.BackgroundColor = [0.8196 0.0157 0.5451];
+            app.lblLabel4.Position = [352 399 128 22];
+            app.lblLabel4.Text = '';
+
+            % Create lblLabel5
+            app.lblLabel5 = uilabel(app.UIFigure);
+            app.lblLabel5.BackgroundColor = [0.8196 0.0157 0.5451];
+            app.lblLabel5.Position = [1 1 25 398];
+            app.lblLabel5.Text = '';
+
+            % Create lblLabel6
+            app.lblLabel6 = uilabel(app.UIFigure);
+            app.lblLabel6.BackgroundColor = [0.8196 0.0157 0.5451];
+            app.lblLabel6.Position = [1 -10 489 22];
+            app.lblLabel6.Text = '';
+
+            % Create lblLabel4_2
+            app.lblLabel4_2 = uilabel(app.UIFigure);
+            app.lblLabel4_2.BackgroundColor = [0.8196 0.0157 0.5451];
+            app.lblLabel4_2.Position = [1 399 130 22];
+            app.lblLabel4_2.Text = '';
+
+            % Create lblLabel4_3
+            app.lblLabel4_3 = uilabel(app.UIFigure);
+            app.lblLabel4_3.BackgroundColor = [0.949 0.4039 0.7725];
+            app.lblLabel4_3.Position = [26 167 184 10];
+            app.lblLabel4_3.Text = '';
+
+            % Create lblLabel4_4
+            app.lblLabel4_4 = uilabel(app.UIFigure);
+            app.lblLabel4_4.BackgroundColor = [0.949 0.4039 0.7725];
+            app.lblLabel4_4.Position = [276 167 189 10];
+            app.lblLabel4_4.Text = '';
+
+            % Create IyyEditFieldLabel
+            app.IyyEditFieldLabel = uilabel(app.UIFigure);
+            app.IyyEditFieldLabel.BackgroundColor = [1 0 1];
+            app.IyyEditFieldLabel.HorizontalAlignment = 'right';
+            app.IyyEditFieldLabel.FontSize = 18;
+            app.IyyEditFieldLabel.FontWeight = 'bold';
+            app.IyyEditFieldLabel.Position = [34 330 30 23];
+            app.IyyEditFieldLabel.Text = 'Iyy';
+
+            % Create edtIyy
+            app.edtIyy = uieditfield(app.UIFigure, 'numeric');
+            app.edtIyy.AllowEmpty = 'on';
+            app.edtIyy.BackgroundColor = [1 0 1];
+            app.edtIyy.Position = [76 330 100 23];
+            app.edtIyy.Value = [];
+
+            % Create lblLabel8
+            app.lblLabel8 = uilabel(app.UIFigure);
+            app.lblLabel8.BackgroundColor = [1 1 0];
+            app.lblLabel8.Position = [25 57 440 22];
+            app.lblLabel8.Text = '';
+
+            % Create lblLabel4_5
+            app.lblLabel4_5 = uilabel(app.UIFigure);
+            app.lblLabel4_5.BackgroundColor = [0.7529 0.3608 0.9843];
+            app.lblLabel4_5.Position = [25 217 441 38];
+            app.lblLabel4_5.Text = '';
+
+            % Show the figure after all components are created
+            app.UIFigure.Visible = 'on';
+        end
+    end
+
+    % App creation and deletion
+    methods (Access = public)
+
+        % Construct app
+        function app = NEW_TN_225076985_app1
+
+            % Create UIFigure and components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.UIFigure)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.UIFigure)
+        end
+    end
+end]]></w:t></w:r></w:p></w:body></w:document>
