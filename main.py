@@ -392,7 +392,7 @@ def decorative_badge(icon, color=ACCENT_LIGHT):
 def img_box(b64, width=260, height=170):
     return ft.Container(
         content=ft.Image(
-            src=_b64_to_tmp(b64)
+            src=_b64_to_tmp(b64),
             width=width, height=height,
             fit="contain",
         ),
