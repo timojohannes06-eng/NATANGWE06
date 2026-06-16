@@ -1359,4 +1359,4 @@ def main(page: ft.Page):
     page.add(ft.Container(content=root, expand=True))
 
 
-ft.run(main)
+ft.app(main)
