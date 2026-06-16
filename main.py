@@ -470,7 +470,7 @@ def zoom_image_dialog(page, title, b64, width=420, height=280):
         title=ft.Text(title, color=WHITE, weight=ft.FontWeight.BOLD),
         content=ft.Container(
             content=ft.Image(
-               src_base64=b64,
+               src=_b64_to_tmp(b64),
                 width=width,
                 height=height,
                 fit="contain",
