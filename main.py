@@ -19,6 +19,14 @@ except ModuleNotFoundError:
 
 
 
+def _b64_to_tmp(b64_str: str, suffix=".png"):
+    data = base64.b64decode(b64_str)
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+    tmp.write(data)
+    tmp.close()
+    return tmp.name
+
+
 def _local_file_to_tmp(path: str) -> str:
     """Create a temp copy of a local image file for reliable Flet loading."""
     if not os.path.exists(path):
@@ -909,7 +917,7 @@ def certificate_fullscreen_viewer(cert, on_back, on_home):
 
     preview = ft.Image(
         src_base64=img,
-        width=1100
+        width=1100,
         height=720,
         fit="contain",
     ) if img else ft.Column([
@@ -1258,7 +1266,7 @@ def main(page: ft.Page):
     # ── Welcome page ──────────────────────────────────────────────────────────
     def welcome_page():
         profile = ft.Container(
-            content=ft.Image(src_base64=IMG_PROFILE), width=150, height=150,
+            content=ft.Image(src_base64=IMG_PROFILE, width=150, height=150,
                              fit="cover"),
             width=150, height=150, border_radius=75,
             clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
@@ -1352,4 +1360,4 @@ def main(page: ft.Page):
     page.add(ft.Container(content=root, expand=True))
 
 
-ft.app(main, view=ft.AppView.WEB_BROWSER)
+ft.app(main)
