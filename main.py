@@ -392,7 +392,7 @@ def decorative_badge(icon, color=ACCENT_LIGHT):
 def img_box(b64, width=260, height=170):
     return ft.Container(
         content=ft.Image(
-            src_base64=b64,
+            src=_b64_to_tmp(b64)
             width=width, height=height,
             fit="contain",
         ),
@@ -916,7 +916,7 @@ def certificate_fullscreen_viewer(cert, on_back, on_home):
     status = cert.get("status", "") if cert else ""
 
     preview = ft.Image(
-        src_base64=img,
+        src=_b64_to_tmp(img),
         width=1100,
         height=720,
         fit="contain",
@@ -1014,7 +1014,7 @@ def achievements_page(on_back, on_home, page=None, on_open_certificate=None):
                 )
             )
         preview = ft.Image(
-            src_base64=cert_img,
+            src=_b64_to_tmp(cert_img),
             width=250,
             height=155,
             fit="contain",
@@ -1266,12 +1266,18 @@ def main(page: ft.Page):
     # ── Welcome page ──────────────────────────────────────────────────────────
     def welcome_page():
         profile = ft.Container(
-            content=ft.Image(src_base64=IMG_PROFILE, width=150, height=150,
-                             fit="cover"),
-            width=150, height=150, border_radius=75,
-            clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
-            border=_border_all(3, ACCENT),
-        )
+        content=ft.Image(
+            src=_b64_to_tmp(IMG_PROFILE),
+            width=150,
+            height=150,
+            fit="cover"
+        ),
+        width=150,
+        height=150,
+        border_radius=75,
+        clip_behavior=ft.ClipBehavior.ANTI_ALIAS,
+        border=_border_all(3, ACCENT),
+    )
 
         enter_btn = ft.Container(
             content=ft.ElevatedButton(
